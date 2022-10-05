@@ -3,6 +3,7 @@ import { NextSeo } from 'next-seo'
 import { motion } from 'framer-motion'
 import NProgress from 'nprogress';
 import { useRouter } from 'next/router';
+import Footer from '../components/footer/Footer';
 
 
 type Props = {
@@ -46,7 +47,10 @@ const AppLayout = ({ children, title, description }: Props): JSX.Element => {
                 "
             >
                 <section>
-                    {children}
+                    <main>
+                        {children}
+                    </main>
+                    <Footer />
                 </section>
             </motion.main>
         </div>

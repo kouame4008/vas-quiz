@@ -16,7 +16,12 @@
     src: url("/fonts/RegaveDemibold-nRZrJ.ttf");
 }
 
+@font-face {
+    font-family: Mulish;
+    src: url("/fonts/Mulish-Regular.ttf");
+}
+
 $primary_color : #098b05;
 $secondary_color : #1ec619;
-$font_familly : Poppins;
+$font_familly : Mulish;
 $panel_color : #253238;
