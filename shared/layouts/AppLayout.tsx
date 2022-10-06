@@ -20,6 +20,8 @@ const variants = {
     exit: { opacity: 0, x: 0, y: -100 },
 }
 
+const pathname = ['/welcome'];
+
 const AppLayout = ({ children, title, description }: Props): JSX.Element => {
     const router = useRouter()
     React.useEffect(() => {
@@ -50,7 +52,7 @@ const AppLayout = ({ children, title, description }: Props): JSX.Element => {
                     <main>
                         {children}
                     </main>
-                    <Footer />
+                    {pathname.includes (router.asPath) && <Footer />}
                 </section>
             </motion.main>
         </div>

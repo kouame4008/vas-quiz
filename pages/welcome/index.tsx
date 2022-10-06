@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useState } from 'react';
 import AppLayout from '../../shared/layouts/AppLayout';
 import { Col, Container, Navbar, Row } from 'react-bootstrap';
 
@@ -15,42 +15,58 @@ import {
     ContentTxt,
     IntoTitle,
     IntoSubTitle,
-    SectionMain
+    SectionMain,
 } from './components/css';
 import { Avatar, Space, Typography } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { QBdefault } from '../../shared/components/header/css/Buttons';
 import Card from './components/card/Card';
 import LotaGagner from './components/card/LotaGagner';
+import Header from '../../shared/components/header/Header';
+import QuizModal from '../../shared/components/modal/QuizModal';
+import { ModalChoisirOptions } from '../../shared/components/modal/QuizModalActions';
 
 
-const { Title } = Typography
+const { Title } = Typography;
+
+const cardData = [
+    {
+        title: 'Classement',
+        description: 'Cette formule vous donne droit à un pack de trois questions.'
+    },
+    {
+        title: 'Formule Normale',
+        description: 'Cette formule vous donne droit à un pack de trois questions.'
+    },
+    {
+        title: 'Formule Turbo',
+        description: 'Cette formule vous donne droit à un pack de trois questions.'
+    }
+]
 
 const Accueil: NextPage = () => {
+    const [visible, setVisible] = useState(false);
+    const router = useRouter ()
 
+    const handleOpenModal = () => {
+        if (visible === false) {
+            setVisible(true)
+        }
+        else {
+            setVisible(false)
+        }
+    }
+
+    const handleSubmit = ()=> {
+        router.push ('/quiz')
+    }
 
     return (
         <AppLayout title='Quiz' description='Quiz'>
             <Section>
-                <SectionTop>
+                <SectionTop color='grey'>
                     <Navbar>
-                        <Container>
-                            <Navbar.Brand href="#home">
-                                <Logo />
-                            </Navbar.Brand>
-                            <Navbar.Toggle />
-                            <Navbar.Collapse className="justify-content-end">
-                                <Space>
-                                    <UserInfoContent>
-                                        <small>Bonjour.</small>
-                                        <span>07 77 95 23 56</span>
-                                    </UserInfoContent>
-                                    <div>
-                                        <Avatar size="large" icon={<UserOutlined />} />
-                                    </div>
-                                </Space>
-                            </Navbar.Collapse>
-                        </Container>
+                        <Header />
                     </Navbar>
                     <SectionTopContent>
                         <Row>
@@ -80,17 +96,11 @@ const Accueil: NextPage = () => {
 
                 <SectionMain>
                     <Row>
-                        <Col md={4}>
-                            <Card />
-                        </Col>
-
-                        <Col md={4}>
-                            <Card />
-                        </Col>
-
-                        <Col md={4}>
-                            <Card />
-                        </Col>
+                        {cardData.map((item, index) => (
+                            <Col md={4} onClick={handleOpenModal}>
+                                <Card />
+                            </Col>
+                        ))}
                     </Row>
 
                     <div className='d-flex justify-content-center pt-4 flex-column'>
@@ -104,7 +114,16 @@ const Accueil: NextPage = () => {
                     <LotaGagner />
                 </SectionMain>
             </Section>
+
+            {visible &&
+                <ModalChoisirOptions
+                    visible={visible}
+                    close={handleOpenModal}
+                    handleOk={handleSubmit}
+                />}
+
         </AppLayout>
+
 
     )
 }
