@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CardBody, Circle, CardBodyTheme, LotText } from '../css';
+import { CardBody, Circle, CardBodyTheme, LotText } from '../../../../shared/components/welcome-css';
 
 
 const Theme = ({ title }: { title: string }) => {

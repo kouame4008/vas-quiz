@@ -16,7 +16,7 @@ import {
     IntoTitle,
     IntoSubTitle,
     SectionMain,
-} from './components/css';
+} from '../../shared/components/welcome-css';
 import { Avatar, Space, Typography } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { QBdefault } from '../../shared/components/header/css/Buttons';

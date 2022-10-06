@@ -14,7 +14,7 @@ import {
     IntoTitle,
     IntoSubTitle,
     FormNumeroContent
-} from '../welcome/components/css';
+} from '../../shared/components/welcome-css';
 import {
     Formik,
     Form,

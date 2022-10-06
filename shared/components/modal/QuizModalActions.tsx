@@ -1,6 +1,6 @@
 import { Space } from "antd";
 import { useRouter } from "next/router";
-import { CardBody, Circle } from "../../../pages/welcome/components/css";
+import { CardBody, Circle } from "../welcome-css";
 import { QBActive, QBdefaultPadding } from "../header/css/Buttons";
 import { IModalChoisirFormule } from "../interface/Interface";
 import QuizModal from "./QuizModal"

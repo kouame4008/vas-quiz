@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import * as React from 'react';
 import { Row, Col } from 'react-bootstrap';
-import { Circle, LotText, LotSubText, CirclePlus } from '../css';
+import { Circle, LotText, LotSubText, CirclePlus } from '../../../../shared/components/welcome-css';
 import Plus from '../../../../public/assets/plus.svg';
 
 const length = 3;

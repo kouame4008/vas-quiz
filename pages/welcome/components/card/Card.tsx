@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CardBody, Circle } from '../css';
+import { CardBody, Circle } from '../../../../shared/components/welcome-css';
 
 
 const Card = () => {

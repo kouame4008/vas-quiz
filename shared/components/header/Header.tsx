@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Navbar, Container } from 'react-bootstrap';
-import { Logo, UserInfoContent } from '../../../pages/welcome/components/css';
+import { Logo, UserInfoContent } from '../welcome-css';
 import { Space, Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/router';

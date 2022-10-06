@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Circle } from '../../welcome/components/css';
+import { Circle } from '../../../shared/components/welcome-css';
 
 const Section = styled.div`
     border: 1px solid #DEDEDE;
