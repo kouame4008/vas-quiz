@@ -4,7 +4,7 @@ import { Circle, LotText, LotSubText, CirclePlus } from '../../../../shared/comp
 import Plus from '../../../../public/assets/plus.svg';
 import Img_lot_1 from '../../../../public/assets/lots/Img_lot_1.png';
 import Img_lot_2 from '../../../../public/assets/lots/Img_lot_2.png';
-import Img_lot_3 from '../../../../public/assets/lots/Img_lot_3.png';
+import Img_lot_3 from '../../../../public/assets/lots/img_lot_3.png';
 import Image from 'next/image';
 
 const lots = [
