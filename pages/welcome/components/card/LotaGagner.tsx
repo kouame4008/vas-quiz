@@ -1,29 +1,54 @@
-import Image from 'next/image';
 import * as React from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { Circle, LotText, LotSubText, CirclePlus } from '../../../../shared/components/welcome-css';
 import Plus from '../../../../public/assets/plus.svg';
+import Img_lot_1 from '../../../../public/assets/lots/Img_lot_1.png';
+import Img_lot_2 from '../../../../public/assets/lots/Img_lot_2.png';
+import Img_lot_3 from '../../../../public/assets/lots/Img_lot_3.png';
+import Image from 'next/image';
 
-const length = 3;
-const lot = ['1er lot', 'Deuxieme lot', 'Troixieme lot']
+const lots = [
+    {
+        title: '1er lot',
+        description: 'Omnis iste nauti error<br />sit volupatem',
+        image: Img_lot_1
+    },
+    {
+        title: 'Deuxieme lot',
+        description: 'Omnis iste nauti error<br />sit volupatem',
+        image: Img_lot_2
+    },
+    {
+        title: 'Troixieme lot',
+        description: 'Omnis iste nauti error<br />sit volupatem',
+        image: Img_lot_3
+    }
+]
 
 const LotaGagner = () => {
+
+    function createMarkup(textTransform: string) {
+        return { __html: textTransform };
+    }
 
     return (
         <React.Fragment>
             <Row className='pt-4'>
-                {Array.from({ length }, (v, k) => k).map((k, i) => (
+                {lots.map((item, i) => (
                     <Col md={3}>
                         <div className='w-100 d-flex justify-content-center align-content-center'>
-                            <Circle dimension='151px' />
+                            <div>
+                                <Image
+                                    src={item.image.src}
+                                    width={item.image.width}
+                                    height={item.image.height}
+                                />
+                            </div>
                         </div>
                         <LotText>
-                            {lot[i]}
+                            {item.title}
                         </LotText>
-                        <LotSubText>
-                            Omnis iste nauti error<br />
-                            sit volupatem
-                        </LotSubText>
+                        <LotSubText dangerouslySetInnerHTML={createMarkup(item.description)} />
                     </Col>
                 ))}
                 <Col md={3}>
