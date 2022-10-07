@@ -1,28 +1,21 @@
+import Image from 'next/image';
 import * as React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import styled from 'styled-components';
+import FooterLogoQuiz from '../../../public/assets/Footer_logo.png';
+import FooterBottom from './FooterBottom';
 
 
-const AppFooter = styled.footer`
-    
-`;
+const AppFooter = styled.footer``;
 
-const FooterBottom = styled.div`
-    padding : 1rem;
-    background: #E2E2E2 0% 0% no-repeat padding-box;
-`;
 const AppFooterTop = styled.div`
     background: #F0F0F0 0% 0% no-repeat padding-box;
     padding : 1rem;
 `;
 
 const FormRound = styled.div`
-    width : 50px;
-    height : 50px;
-    background : #FFF;
     margin-right : 10px;
     border-radius : 10px;
-   
 `;
 
 const SmallTxt = styled.small`
@@ -71,14 +64,20 @@ const Footer = () => {
                     <Row>
                         <Col md={6}>
                             <div className='d-flex'>
-                                <FormRound />
+                                <FormRound>
+                                    <Image
+                                        src={FooterLogoQuiz.src}
+                                        width={FooterLogoQuiz.width}
+                                        height={FooterLogoQuiz.height}
+                                    />
+                                </FormRound>
                                 <SmallTxt style={{ flex: 1 }}>
                                     Quiz Côte d’Ivoire est un produit VAS Technologie <br />
+                                    Sed ut  perspiciatis unde omnis iste natus error sit
                                     Sed ut  perspiciatis unde omnis iste natus error sit
                                 </SmallTxt>
                             </div>
                         </Col>
-
                         <Col md={6}>
                             <div className='d-flex justify-content-end'>
                                 <ListFooter>
@@ -91,11 +90,7 @@ const Footer = () => {
                     </Row>
                 </Container>
             </AppFooterTop>
-            <FooterBottom>
-                <Container>
-                    <SmallTxt>2022 Copyright - VAS technologies</SmallTxt>
-                </Container>
-            </FooterBottom>
+            <FooterBottom />
         </AppFooter>
     )
 }

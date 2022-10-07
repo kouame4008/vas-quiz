@@ -25,6 +25,9 @@ import { FormError, InputItemField, InputItemNumberField } from '../shared/compo
 import { QBActive, QBdefaultPadding } from '../shared/components/header/css/Buttons';
 import { Space } from 'antd';
 import Theme from './welcome/components/card/Theme';
+import LogoQuiz from '../public/assets/Header-logo-blue.png';
+import LayoutBlanc from '../shared/layouts/LayoutBlanc';
+
 
 const phoneRegExp = /(07)[1-9]*(\d)/;
 
@@ -45,11 +48,11 @@ const ListTheme = [
 ]
 
 export default function () {
-    const router = useRouter ();
+    const router = useRouter();
     const handleSubmitForm = (values: Idigit) => { }
 
     const hanlderedirectRoute = () => {
-        router.push ('/welcome')
+        router.push('/welcome')
     }
 
     const validationSchema = Yup.object().shape({
@@ -70,11 +73,7 @@ export default function () {
     };
 
     return (
-        <AppLayout title='Quiz' description='Quiz'>
-            <Navbar style={{ boxShadow: 'rgba(0, 0, 0, 0.01) 0px 10px 27px' }}>
-                <Header />
-            </Navbar>
-
+        <LayoutBlanc>
             <Section>
                 <SectionTop color='FFF'>
                     <SectionTopContent>
@@ -82,10 +81,10 @@ export default function () {
                             <Col md={4} xs={4}>
                                 <ContentTxt>
                                     <section>
-                                        <IntoTitle style={{ fontSize: '56px' }}>
+                                        <IntoTitle style={{ fontSize: '56px', color: '#004E9C' }}>
                                             Sélectionnez  <br />  un thème  <br />
                                         </IntoTitle>
-                                        <IntoSubTitle>
+                                        <IntoSubTitle style={{ color: '#000' }}>
                                             Sed ut perspiciatis unde omnis iste natus error
                                             sit voluptatem accusantium doloremque laudantium, totam rem
                                             aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto
@@ -97,8 +96,8 @@ export default function () {
                             </Col>
                             <Col md={8} xs={4}>
                                 <Row>
-                                    {ListTheme.map((item) => (
-                                        <Col md={4} onClick={hanlderedirectRoute}>
+                                    {ListTheme.map((item, it) => (
+                                        <Col md={4} key={it} onClick={hanlderedirectRoute}>
                                             <Theme title={item} />
                                         </Col>
                                     ))}
@@ -108,7 +107,7 @@ export default function () {
                     </SectionTopContent>
                 </SectionTop>
             </Section>
-        </AppLayout>
+        </LayoutBlanc>
 
     )
 }

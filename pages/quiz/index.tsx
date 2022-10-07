@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useState } from 'react';
 import { Row, Col, Navbar } from 'react-bootstrap';
 import Header from '../../shared/components/header/Header';
 import AppLayout from '../../shared/layouts/AppLayout';
@@ -23,10 +23,25 @@ import {
 import * as Yup from 'yup';
 import { FormError, InputItemField, InputItemNumberField } from '../../shared/components/formComponent';
 import { QBActive, QBdefaultPadding } from '../../shared/components/header/css/Buttons';
-import { Space, Typography } from 'antd';
+import { Space, Typography, Button, message, Steps } from 'antd';
 import Theme from '../welcome/components/card/Theme';
 import Question from './components/Question';
 import { ArrowRightOutlined } from '@ant-design/icons';
+import Questions from '../../shared/components/steps/Questions';
+import styled from 'styled-components';
+import FooterBottom from '../../shared/components/footer/FooterBottom';
+import { useTimer } from 'react-timer-hook';
+import LogoQuiz from '../../public/assets/Header-logo-blue.png';
+import LayoutBlanc from '../../shared/layouts/LayoutBlanc';
+
+
+
+
+
+const Fade = require("react-reveal/Fade")
+
+
+
 
 interface Idigit {
     digit_1: string;
@@ -35,7 +50,7 @@ interface Idigit {
     digit_4: string;
 }
 
-const {Title} = Typography
+const { Title } = Typography
 
 const ListTheme = [
     'Culture générale',
@@ -44,75 +59,97 @@ const ListTheme = [
     'Musique',
     'Arts',
     'Culture générale'
-]
+];
+
+const { Step } = Steps;
+
+const steps = [
+    {
+        title: 'Question 1',
+    },
+    {
+        title: 'Question 2',
+    },
+    {
+        title: 'Question 3',
+    },
+];
+
+const QSteps = styled(Steps)`
+    .ant-steps-item {
+        display : none;
+    }
+`;
+
+const Bottom = styled.div`
+    position: fixed;
+    width: 100%;
+    bottom: 0
+`;
 
 export default function () {
     const router = useRouter();
+    const [current, setCurrent] = useState(0);
+    const expiryTimestamp = new Date();
+    expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + 120);
+
+    const {
+        seconds,
+        minutes,
+        hours,
+        days,
+        isRunning,
+        start,
+        pause,
+        resume,
+        restart,
+    } = useTimer({ expiryTimestamp, onExpire: () => console.warn('onExpire called') });
+
+
+    const next = () => {
+        restart(expiryTimestamp)
+        setCurrent(current + 1);
+    };
+
+    const prev = () => {
+        restart(expiryTimestamp)
+        setCurrent(current - 1);
+    };
+
+    const done = () => {
+
+    };
+
 
     const handleOk = () => { }
 
+    const StepContentComponent = (title: string) => {
+        return (
+            <Fade top>
+                <Questions seconds={seconds} minutes={minutes} title={title} next={next} prev={prev} steps={steps.length} current={current} done={done} />
+            </Fade>
+        )
+    }
 
 
     return (
-        <AppLayout title='Quiz' description='Quiz'>
-            <Navbar style={{ boxShadow: 'rgba(0, 0, 0, 0.01) 0px 10px 27px' }}>
-                <Header />
-            </Navbar>
-
+        <LayoutBlanc>
             <Section>
                 <SectionTop color='FFF'>
-                    <SectionTopContent >
-                        <div className='d-flex justify-content-between'>
-                            <Title level={4}>
-                                Question 1
-                            </Title>
+                    <>
+                        <QSteps current={current} >
+                            {steps.map(item => (
+                                <Step key={item.title} title={item.title} />
+                            ))}
+                        </QSteps>
+                        <div className="steps-content">
+                            {StepContentComponent(steps[current].title)}
                         </div>
-                        <Row className='pt-4' style={{ borderTop: '1px solid rgba(0,0,0,.1)', borderBottom: '1px solid rgba(0,0,0,.1)' }}>
-                            <Col md={4} xs={4}>
-                                <ContentTxt style={{ alignItems: 'flex-start' }}>
-                                    <section>
-                                        <IntoSubTitle>
-                                            Sed ut perspiciatis unde omnis iste natus error
-                                            sit voluptatem accusantium doloremque laudantium, totam rem
-                                            aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto
-                                            beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas
-                                        </IntoSubTitle>
+                    </>
 
-                                    </section>
-                                </ContentTxt>
-                            </Col>
-                            <Col md={8} xs={4}>
-                                <Row>
-                                    {ListTheme.map((item) => (
-                                        <Col md={6}>
-                                            <Question />
-                                        </Col>
-                                    ))}
-                                </Row>
-                            </Col>
-                        </Row>
-                        <div className='mt-2'>
-                            <Space>
-                                <QBActive
-                                    onClick={handleOk}
-                                >
-                                    VALIDER RÉPONSE
-                                </QBActive>
-
-                                <QBdefaultPadding
-                                    onClick={close}
-                                >
-                                    <Space>
-                                        <span>PASSER</span>
-                                        <ArrowRightOutlined />
-                                    </Space>
-                                </QBdefaultPadding>
-                            </Space>
-                        </div>
-                    </SectionTopContent>
                 </SectionTop>
             </Section>
-        </AppLayout>
+        </LayoutBlanc>
 
     )
 }

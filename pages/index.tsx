@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useState } from 'react';
 import { Row, Col, Navbar } from 'react-bootstrap';
 import Header from '../shared/components/header/Header';
 import AppLayout from '../shared/layouts/AppLayout';
@@ -24,14 +24,18 @@ import {
 import * as Yup from 'yup';
 import { FormError, InputItemField, InputItemNumberField } from '../shared/components/formComponent';
 import { QBActive } from '../shared/components/header/css/Buttons';
+import LogoQuiz from '../public/assets/Header-logo-blue.png';
+import LayoutBlanc from '../shared/layouts/LayoutBlanc';
 
 const phoneRegExp = /(07)[1-9]*(\d)/;
 
 export default function () {
-  const router = useRouter ()
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
 
   const handleSubmitForm = (values: { numero: string }) => {
-     router.push ('/verifier-otp')
+    setLoading(true)
+    router.push('/verifier-otp')
   }
 
   const validationSchema = Yup.object().shape({
@@ -52,11 +56,7 @@ export default function () {
   };
 
   return (
-    <AppLayout title='Quiz' description='Quiz'>
-      <Navbar style={{ boxShadow: 'rgba(0, 0, 0, 0.01) 0px 10px 27px' }}>
-        <Header />
-      </Navbar>
-
+    <LayoutBlanc>
       <Section>
         <SectionTop color='FFF'>
           <SectionTopContent>
@@ -64,10 +64,10 @@ export default function () {
               <Col md={5} xs={4}>
                 <ContentTxt>
                   <section>
-                    <IntoTitle style={{ fontSize: '56px' }}>
+                    <IntoTitle style={{ fontSize: '56px', color: '#000' }}>
                       Joue. <br /> Apprends. <br /> Gagne.
                     </IntoTitle>
-                    <IntoSubTitle>
+                    <IntoSubTitle style={{ color: '#000' }}>
                       Sed ut perspiciatis unde omnis iste natus error
                       sit voluptatem accusantium doloremque laudantium, totam rem
                       aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto
@@ -96,7 +96,7 @@ export default function () {
                                 <InputItemField
                                   value={values.numero}
                                   onChange={(e) => {
-                                     controlText (e) === true && setFieldValue ('numero', e.target.value)
+                                    controlText(e) === true && setFieldValue('numero', e.target.value)
                                   }}
                                   placeholder="Ex: 0777952356"
                                   type='tel'
@@ -108,6 +108,8 @@ export default function () {
                                 >
                                   <QBActive
                                     onClick={() => handleSubmit()}
+                                    loading={loading}
+                                    disabled={loading}
                                   >
                                     VALIDER
                                   </QBActive>
@@ -131,7 +133,6 @@ export default function () {
           </SectionTopContent>
         </SectionTop>
       </Section>
-    </AppLayout>
-
+    </LayoutBlanc>
   )
 }

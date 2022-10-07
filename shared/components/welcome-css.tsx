@@ -3,9 +3,17 @@ import { Container } from 'react-bootstrap';
 import { Modal } from 'antd';
 
 const greyColor = '#DEDEDE 0% 0% no-repeat padding-box;'
+const welBackground = 'transparent linear-gradient(310deg, #004E9C 0%, #0090B8 100%) 0% 0% no-repeat padding-box';
+const bleuOpac = 'rgba(0, 144, 184, 0.2)';
+
+
+
+
 export const Section = styled(Container)``;
+
+
 export const SectionTop = styled.section`
-    background: ${(props: { color: string }) => props.color == 'grey' ? `${greyColor}` : `#FFF`};
+    background: ${(props: { color: string }) => props.color == 'grey' ? `${welBackground}` : `#FFF`};
     padding: 0 20px 2rem 20px;
     border-radius: 0 0 20px 20px;
 `;
@@ -47,7 +55,7 @@ export const Circle = styled.div`
 export const ContentTxt = styled.div`
   display : flex;
   justify-content : start;
-  align-items : center;
+  align-items : start;
   flex-direction : row;
   height : 100%;
 `;
@@ -55,10 +63,12 @@ export const ContentTxt = styled.div`
 export const IntoTitle = styled.h3`
   font-weight: 600;
   margin-bottom: 1.3rem;
+  color :#FFF;
 `;
 
 export const IntoSubTitle = styled.div`
   margin-bottom: 1.3rem;
+  color :#FFF;
 `;
 
 export const SectionMain = styled.section`
@@ -67,7 +77,7 @@ export const SectionMain = styled.section`
 
 export const CardBody = styled.div`
   border-radius : 20px;
-  background : ${greyColor};
+  background : ${(props:{color : string;}) => props.color};
   padding : 1rem;
   display : flex;
   cursor: pointer;
@@ -75,7 +85,7 @@ export const CardBody = styled.div`
 
 export const CardBodyTheme = styled.div`
   border-radius : 20px;
-  background : ${greyColor};
+  background : ${bleuOpac};
   padding : 1rem;
   display : flex;
   flex-direction : column;
@@ -99,7 +109,7 @@ export const LotSubText = styled.span`
 `
 
 export const CirclePlus = styled.div`
-  background : #F0F0F0 0% 0% no-repeat padding-box;
+  background : rgba(0, 144, 184, 0.2);
   height : ${(props: { dimension: string }) => props.dimension};
   width : ${(props: { dimension: string }) => props.dimension};
   border-radius : 50%;

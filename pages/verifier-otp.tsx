@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useState } from 'react';
 import { Row, Col, Navbar } from 'react-bootstrap';
 import Header from '../shared/components/header/Header';
 import AppLayout from '../shared/layouts/AppLayout';
@@ -24,6 +24,9 @@ import * as Yup from 'yup';
 import { FormError, InputItemField, InputItemNumberField } from '../shared/components/formComponent';
 import { QBActive, QBdefaultPadding } from '../shared/components/header/css/Buttons';
 import { Space } from 'antd';
+import LogoQuiz from '../public/assets/Header-logo-blue.png';
+import LayoutBlanc from '../shared/layouts/LayoutBlanc';
+
 
 const phoneRegExp = /(07)[1-9]*(\d)/;
 
@@ -36,8 +39,11 @@ interface Idigit {
 
 export default function () {
     const router = useRouter();
+    const [loading, setLoading] = useState(false)
+
 
     const handleSubmitForm = (values: Idigit) => {
+        setLoading(true)
         router.push('/choisir-theme')
     }
 
@@ -59,11 +65,7 @@ export default function () {
     };
 
     return (
-        <AppLayout title='Quiz' description='Quiz'>
-            <Navbar style={{ boxShadow: 'rgba(0, 0, 0, 0.01) 0px 10px 27px' }}>
-                <Header />
-            </Navbar>
-
+        <LayoutBlanc>
             <Section>
                 <SectionTop color='FFF'>
                     <SectionTopContent>
@@ -71,10 +73,10 @@ export default function () {
                             <Col md={4} xs={4}>
                                 <ContentTxt>
                                     <section>
-                                        <IntoTitle style={{ fontSize: '56px' }}>
+                                        <IntoTitle style={{ fontSize: '56px', color: '#000' }}>
                                             Encore une <br />  Étape ! <br />
                                         </IntoTitle>
-                                        <IntoSubTitle>
+                                        <IntoSubTitle style={{ color: '#000' }}>
                                             Sed ut perspiciatis unde omnis iste natus error
                                             sit voluptatem accusantium doloremque laudantium, totam rem
                                             aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto
@@ -95,7 +97,7 @@ export default function () {
                                                 digit_4: '',
                                             }}
                                             onSubmit={(values: Idigit) => handleSubmitForm(values)}
-                                            // validationSchema={validationSchema}
+                                        // validationSchema={validationSchema}
                                         >
                                             {({ values, handleChange, handleSubmit, errors, touched, setFieldValue }) => (
                                                 <Form>
@@ -148,6 +150,8 @@ export default function () {
 
                                                                         <QBActive
                                                                             onClick={() => handleSubmit()}
+                                                                            loading={loading}
+                                                                            disabled={loading}
                                                                         >
                                                                             VALIDER
                                                                         </QBActive>
@@ -175,7 +179,7 @@ export default function () {
                     </SectionTopContent>
                 </SectionTop>
             </Section>
-        </AppLayout>
+        </LayoutBlanc>
 
     )
 }

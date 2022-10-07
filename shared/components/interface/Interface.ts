@@ -6,4 +6,6 @@ export interface IModalChoisirFormule {
     close: any,
     handleOk ?: any,
     title?: string;
+    currentItem ?: any;
+    loading ?: boolean;
 }

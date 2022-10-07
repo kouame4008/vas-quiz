@@ -10,6 +10,8 @@ export const ModalChoisirOptions = ({
     visible,
     close,
     handleOk,
+    currentItem,
+    loading
 }: IModalChoisirFormule) => {
 
 
@@ -18,17 +20,18 @@ export const ModalChoisirOptions = ({
             visible={visible}
             close={close}
         >
-            <CardBody style={{ background: 'transparent' }}>
+            <CardBody color="transparent">
                 <div style={{ flex: 1 }}>
-                    <h3 style={{ fontSize: '20px', fontWeight: 600 }}>Formule Normale</h3>
+                    <h3 style={{ fontSize: '20px', fontWeight: 600 }}> {currentItem && currentItem.title} </h3>
                     <span>
-                        Pour cette formule vous serez prélevez d’un montant
-                        de 103 FCFA. Vous donnant droit à un pack de 03  question.
+                        {currentItem && currentItem.formule}
                     </span>
                     <div className='mt-2'>
                         <Space>
                             <QBActive
-                                onClick={handleOk}
+                                onClick={() => handleOk()}
+                                loading={loading && loading}
+                                disabled={loading && loading}
                             >
                                 VALIDER
                             </QBActive>
