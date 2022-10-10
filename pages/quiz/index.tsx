@@ -33,6 +33,7 @@ import FooterBottom from '../../shared/components/footer/FooterBottom';
 import { useTimer } from 'react-timer-hook';
 import LogoQuiz from '../../public/assets/Header-logo-blue.png';
 import LayoutBlanc from '../../shared/layouts/LayoutBlanc';
+import { ModalExpiredTimer } from '../../shared/components/modal/QuizModalActions';
 
 
 
@@ -90,8 +91,9 @@ const Bottom = styled.div`
 export default function () {
     const router = useRouter();
     const [current, setCurrent] = useState(0);
+    const [expiredModal, setExpiredModal] = useState(false)
     const expiryTimestamp = new Date();
-    expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + 120);
+    expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + 60);
 
     const {
         seconds,
@@ -103,10 +105,11 @@ export default function () {
         pause,
         resume,
         restart,
-    } = useTimer({ expiryTimestamp, onExpire: () => console.warn('onExpire called') });
+    } = useTimer({ expiryTimestamp, onExpire: () => handleExpirerTimer() });
 
 
     const next = () => {
+        setExpiredModal (false)
         restart(expiryTimestamp)
         setCurrent(current + 1);
     };
@@ -117,11 +120,19 @@ export default function () {
     };
 
     const done = () => {
-
+        router.push ('/welcome')
     };
 
-
     const handleOk = () => { }
+
+    const handleExpirerTimer = () => {
+        if (expiredModal === false) {
+            setExpiredModal(true)
+        }
+        else {
+            setExpiredModal(false)
+        }
+    }
 
     const StepContentComponent = (title: string) => {
         return (
@@ -148,6 +159,15 @@ export default function () {
                     </>
 
                 </SectionTop>
+
+                {expiredModal &&
+                    <ModalExpiredTimer
+                        visible={expiredModal}
+                        close={handleExpirerTimer}
+                        handleOk={next}
+                        loading={false}
+                    />
+                }
             </Section>
         </LayoutBlanc>
 

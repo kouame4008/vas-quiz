@@ -37,6 +37,7 @@ const QuizModal = ({
             open={visible}
             onCancel={close}
             footer={false}
+            maskClosable={false}
         >
             {children}
         </ModalQuiz>

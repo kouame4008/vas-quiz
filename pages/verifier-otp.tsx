@@ -44,24 +44,43 @@ export default function () {
 
     const handleSubmitForm = (values: Idigit) => {
         setLoading(true)
+        let data = {
+            opt : `${values.digit_1}${values.digit_2}${values.digit_3}${values.digit_4}`
+        }
+        console.log (data)
         router.push('/choisir-theme')
     }
 
     const validationSchema = Yup.object().shape({
-        numero: Yup.string()
-            .required('Le champ numero de telephone est requis')
-            .min(10, 'Le numero de telephone est de 10 caractères')
-            .max(10, 'Le numero de telephone est de 10 caractères')
-            .matches(phoneRegExp, 'Le numero de telephone doit commencer par (07)')
+        digit_1: Yup.string()
+            .required('Le digit 1 est requis')
+            .min(1, 'Le digit doit etre de 1 caractère')
+            .max(1, 'Le digit doit etre de 1 caractère'),
+        digit_2: Yup.string()
+            .required('Le digit 2 est requis')
+            .min(1, 'Le digit doit etre de 1 caractère')
+            .max(1, 'Le digit doit etre de 1 caractère'),
+        digit_3: Yup.string()
+            .required('Le digit 3 est requis')
+            .min(1, 'Le digit doit etre de 1 caractère')
+            .max(1, 'Le digit doit etre de 1 caractère'),
+        digit_4: Yup.string()
+            .required('Le digit 4 est requis')
+            .min(1, 'Le digit doit etre de 1 caractère')
+            .max(1, 'Le digit doit etre de 1 caractère')
     });
 
     const controlText = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value: inputValue } = e.target;
+
         const reg = /^-?\d*(\.\d*)?$/;
         if (reg.test(inputValue) || inputValue === '' || inputValue === '-') {
-            return true;
+            if ((e.target.value).length === 1) {
+                return true;
+            }
+            return false;
         }
-        return false
+        return false;
     };
 
     return (
@@ -97,7 +116,7 @@ export default function () {
                                                 digit_4: '',
                                             }}
                                             onSubmit={(values: Idigit) => handleSubmitForm(values)}
-                                        // validationSchema={validationSchema}
+                                            validationSchema={validationSchema}
                                         >
                                             {({ values, handleChange, handleSubmit, errors, touched, setFieldValue }) => (
                                                 <Form>
@@ -160,10 +179,10 @@ export default function () {
                                                             </Col>
                                                             <Col md={12}>
                                                                 <FormError>
-                                                                    {touched.digit_1 && errors.digit_1 && <div>{errors.digit_1}</div>}
-                                                                    {touched.digit_2 && errors.digit_2 && <div>{errors.digit_2}</div>}
-                                                                    {touched.digit_3 && errors.digit_3 && <div>{errors.digit_3}</div>}
-                                                                    {touched.digit_4 && errors.digit_4 && <div>{errors.digit_4}</div>}
+                                                                    {touched.digit_1 && errors.digit_1 && <span>{errors.digit_1},</span>}
+                                                                    {touched.digit_2 && errors.digit_2 && <span>{errors.digit_2},</span>}
+                                                                    {touched.digit_3 && errors.digit_3 && <span>{errors.digit_3},</span>}
+                                                                    {touched.digit_4 && errors.digit_4 && <span>{errors.digit_4}</span>}
                                                                 </FormError>
                                                             </Col>
                                                         </Row>
