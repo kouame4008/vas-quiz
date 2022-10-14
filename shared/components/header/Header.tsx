@@ -1,17 +1,25 @@
 import * as React from 'react';
 import { Navbar, Container } from 'react-bootstrap';
-import { Logo, UserInfoContent } from '../welcome-css';
-import { Space, Avatar } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { UserInfoContent } from '../welcome-css';
+import { Space, Avatar, notification, Tooltip } from 'antd';
 import { useRouter } from 'next/router';
-import AvatarSrc from '../../../public/btn_deconnexion.png';
+import AvatarSrc from '../../../public/assets/btn_deconnexion.png';
 import Image, { StaticImageData } from 'next/image';
-import { AnyARecord } from 'dns';
-
-const pathname = ['/', '/verifier-otp', '/choisir-theme', '/quiz'];
+import { logout } from '../../../pages/api/user/user-actions';
+import { useSelector } from 'react-redux';
+import { formatterNumber } from '../../helpers/serviceHelpers';
 
 const Header = ({ logo }: { logo: StaticImageData }) => {
-    const router = useRouter()
+    const router = useRouter();
+    const user = useSelector((state: any) => state.user.user);
+
+    const handleLogout = () => {
+        notification.success({
+            message: 'Utilisateur deconnecté !',
+            placement: 'bottomRight',
+        })
+        logout() && router.push('/')
+    }
 
     return (
         <React.Fragment>
@@ -30,10 +38,12 @@ const Header = ({ logo }: { logo: StaticImageData }) => {
                     <Space>
                         <UserInfoContent>
                             <small className='text-white'>Bonjour.</small>
-                            <span className='text-white'>07 77 95 23 56</span>
+                            <span className='text-white'> {user && formatterNumber(user.user_phone)} </span>
                         </UserInfoContent>
                         <div>
-                            <Avatar size="large" src={AvatarSrc.src} style={{ cursor: 'pointer' }} />
+                            <Tooltip title='Se deconnecté'>
+                                <Avatar size="large" src={AvatarSrc.src} style={{ cursor: 'pointer' }} onClick={handleLogout} />
+                            </Tooltip>
                         </div>
                     </Space>
                 </Navbar.Collapse>

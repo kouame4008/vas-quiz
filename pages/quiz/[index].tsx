@@ -1,80 +1,23 @@
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { Row, Col, Navbar } from 'react-bootstrap';
-import Header from '../../shared/components/header/Header';
-import AppLayout from '../../shared/layouts/AppLayout';
 import {
     Section,
     SectionTop,
-    Logo,
-    UserInfoContent,
-    SectionTopContent,
-    Circle,
-    ContentTxt,
-    IntoTitle,
-    IntoSubTitle,
-    FormNumeroContent
 } from '../../shared/components/welcome-css';
-import {
-    Formik,
-    Form,
-    Field,
-} from 'formik';
-import * as Yup from 'yup';
-import { FormError, InputItemField, InputItemNumberField } from '../../shared/components/formComponent';
-import { QBActive, QBdefaultPadding } from '../../shared/components/header/css/Buttons';
-import { Space, Typography, Button, message, Steps } from 'antd';
-import Theme from '../welcome/components/card/Theme';
-import Question from './components/Question';
-import { ArrowRightOutlined } from '@ant-design/icons';
+import { Steps, notification } from 'antd';
 import Questions from '../../shared/components/steps/Questions';
 import styled from 'styled-components';
-import FooterBottom from '../../shared/components/footer/FooterBottom';
 import { useTimer } from 'react-timer-hook';
-import LogoQuiz from '../../public/assets/Header-logo-blue.png';
 import LayoutBlanc from '../../shared/layouts/LayoutBlanc';
 import { ModalExpiredTimer } from '../../shared/components/modal/QuizModalActions';
-
-
-
+import Timer from '../../shared/components/steps/Timer';
+import { enregistrer_score, liste_questions } from '../api/pack/pack-actions';
+import { useSelector } from 'react-redux';
+import { v4 } from 'uuid';
 
 
 const Fade = require("react-reveal/Fade")
-
-
-
-
-interface Idigit {
-    digit_1: string;
-    digit_2: string;
-    digit_3: string;
-    digit_4: string;
-}
-
-const { Title } = Typography
-
-const ListTheme = [
-    'Culture générale',
-    'Sport',
-    'Politique',
-    'Musique',
-    'Arts',
-    'Culture générale'
-];
-
 const { Step } = Steps;
-
-const steps = [
-    {
-        title: 'Question 1',
-    },
-    {
-        title: 'Question 2',
-    },
-    {
-        title: 'Question 3',
-    },
-];
 
 const QSteps = styled(Steps)`
     .ant-steps-item {
@@ -82,34 +25,42 @@ const QSteps = styled(Steps)`
     }
 `;
 
-const Bottom = styled.div`
-    position: fixed;
-    width: 100%;
-    bottom: 0
-`;
-
 export default function () {
     const router = useRouter();
+    const pid = router.query.index as unknown as string;
+    const souscription_id = pid && pid.split('|')[0];
     const [current, setCurrent] = useState(0);
-    const [expiredModal, setExpiredModal] = useState(false)
+    const [expiredModal, setExpiredModal] = useState(false);
+    const [questions, setQuestions] = useState([]);
     const expiryTimestamp = new Date();
     expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + 60);
 
     const {
         seconds,
         minutes,
-        hours,
-        days,
-        isRunning,
-        start,
-        pause,
-        resume,
         restart,
     } = useTimer({ expiryTimestamp, onExpire: () => handleExpirerTimer() });
+    const nombreDePoints = useSelector((state: any) => state.score.points);
 
+    React.useEffect(() => {
+        handlegetListeQuestions();
+    }, []);
+
+
+
+    const handlegetListeQuestions = () => {
+        liste_questions(souscription_id).then((res) => {
+            if (res.status === 'succes') {
+                setQuestions(res.questions);
+            }
+            else {
+                setQuestions([]);
+            }
+        })
+    }
 
     const next = () => {
-        setExpiredModal (false)
+        setExpiredModal(false)
         restart(expiryTimestamp)
         setCurrent(current + 1);
     };
@@ -120,10 +71,24 @@ export default function () {
     };
 
     const done = () => {
-        router.push ('/welcome')
-    };
+        let data = {
+            score: nombreDePoints
+        }
+        router.push(`/score/${v4()}`)
 
-    const handleOk = () => { }
+        // enregistrer_score(data).then((res) => {
+        //     if (res.status === 'succes') {
+        //         router.push(`score/${v4()}`)
+        //     }
+        //     else {
+        //         notification.error({
+        //             message: res.status,
+        //             description: res.message,
+        //             placement: 'bottomRight'
+        //         })
+        //     }
+        // })
+    };
 
     const handleExpirerTimer = () => {
         if (expiredModal === false) {
@@ -134,30 +99,40 @@ export default function () {
         }
     }
 
-    const StepContentComponent = (title: string) => {
+    const StepContentComponent = () => {
         return (
             <Fade top>
-                <Questions seconds={seconds} minutes={minutes} title={title} next={next} prev={prev} steps={steps.length} current={current} done={done} />
+                <Questions
+                    seconds={seconds}
+                    minutes={minutes}
+                    title={'title'}
+                    next={next}
+                    prev={prev}
+                    steps={questions && questions.length}
+                    current={current}
+                    done={done}
+                    questions={questions && questions[current]}
+                    key={current}
+                />
             </Fade>
         )
     }
 
-
     return (
         <LayoutBlanc>
             <Section>
+                <Timer />
                 <SectionTop color='FFF'>
                     <>
                         <QSteps current={current} >
-                            {steps.map(item => (
-                                <Step key={item.title} title={item.title} />
+                            {questions && questions.map((item: any) => (
+                                <Step key={item.libelle} title={item.libelle} />
                             ))}
                         </QSteps>
                         <div className="steps-content">
-                            {StepContentComponent(steps[current].title)}
+                            {StepContentComponent()}
                         </div>
                     </>
-
                 </SectionTop>
 
                 {expiredModal &&

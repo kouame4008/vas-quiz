@@ -1,15 +1,10 @@
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { Row, Col, Navbar } from 'react-bootstrap';
-import Header from '../shared/components/header/Header';
-import AppLayout from '../shared/layouts/AppLayout';
+import { Row, Col } from 'react-bootstrap';
 import {
     Section,
     SectionTop,
-    Logo,
-    UserInfoContent,
     SectionTopContent,
-    Circle,
     ContentTxt,
     IntoTitle,
     IntoSubTitle,
@@ -18,39 +13,76 @@ import {
 import {
     Formik,
     Form,
-    Field,
 } from 'formik';
 import * as Yup from 'yup';
-import { FormError, InputItemField, InputItemNumberField } from '../shared/components/formComponent';
+import { FormError, InputItemField } from '../shared/components/formComponent';
 import { QBActive, QBdefaultPadding } from '../shared/components/header/css/Buttons';
-import { Space } from 'antd';
-import LogoQuiz from '../public/assets/Header-logo-blue.png';
+import { notification, Space } from 'antd';
 import LayoutBlanc from '../shared/layouts/LayoutBlanc';
+import { Idigit } from './api/config/interface/Interface';
+import { v4 } from 'uuid';
+import { login_user_check_otp } from './api/user/user-actions';
+import { useDispatch } from 'react-redux';
+import { setUserData } from '../features/user.slice';
 
 
-const phoneRegExp = /(07)[1-9]*(\d)/;
 
-interface Idigit {
-    digit_1: string;
-    digit_2: string;
-    digit_3: string;
-    digit_4: string;
-}
 
 export default function () {
     const router = useRouter();
+    const dispatch = useDispatch();
     const [loading, setLoading] = useState(false)
 
-
-    const handleSubmitForm = (values: Idigit) => {
+    // handleSubmitForm permet de soumettre de formulaire
+    const handleSubmitForm = (values: Idigit, resetForm: any) => {
         setLoading(true)
+        // regroupement des digits et du numero de telephone
+
         let data = {
-            opt : `${values.digit_1}${values.digit_2}${values.digit_3}${values.digit_4}`
+            otp: `${values.digit_1}${values.digit_2}${values.digit_3}${values.digit_4}`,
+            phone_number: localStorage.getItem('PHONE_NUMBER')
         }
-        console.log (data)
-        router.push('/choisir-theme')
+
+        // Check login service
+        login_user_check_otp(data).then((res) => {
+            setLoading(false);
+            if (res.status === 'succes') {
+                // reformated user data
+                let userData = {
+                    user: {
+                        user_id: res.user_id,
+                        user_phone: res.user_phone
+                    },
+                    accessToken: res.token
+                }
+                //  envoie des donnees dans le store
+                dispatch(setUserData(userData));
+
+                //  Vider le storage
+                localStorage.clear();
+
+
+                router.push(`/welcome/${v4()}`)
+            } else {
+                // vider les champs du formulaire
+                resetForm({
+                    values: { digit_1: '', digit_2: '', digit_3: '', digit_4: '', }
+                })
+                notification.error({
+                    message: res.status,
+                    description: res.message
+                })
+            }
+        }).catch(() => {
+            notification.error({
+                message: 'Error',
+                description: 'Network Error'
+            })
+        });
+
     }
 
+    // validationSchema permet de valider les champs du formulaire
     const validationSchema = Yup.object().shape({
         digit_1: Yup.string()
             .required('Le digit 1 est requis')
@@ -70,12 +102,14 @@ export default function () {
             .max(1, 'Le digit doit etre de 1 caractère')
     });
 
+    // controlText permets de filtre et retirer les caracteres alphabetique lorsque le client 
+    // tape sur le clivier pour entrer sont numero
     const controlText = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value: inputValue } = e.target;
-
         const reg = /^-?\d*(\.\d*)?$/;
         if (reg.test(inputValue) || inputValue === '' || inputValue === '-') {
-            if ((e.target.value).length === 1) {
+            // console.log (e)
+            if ((e.target.value).length === 1 || e.target.value === '') {
                 return true;
             }
             return false;
@@ -92,8 +126,9 @@ export default function () {
                             <Col md={4} xs={4}>
                                 <ContentTxt>
                                     <section>
-                                        <IntoTitle style={{ fontSize: '56px', color: '#000' }}>
+                                        <IntoTitle style={{ fontSize: '56px', color: '#004E9C' }}>
                                             Encore une <br />  Étape ! <br />
+                                            OPT : {localStorage && localStorage.getItem('OTP')}
                                         </IntoTitle>
                                         <IntoSubTitle style={{ color: '#000' }}>
                                             Sed ut perspiciatis unde omnis iste natus error
@@ -107,6 +142,7 @@ export default function () {
                             </Col>
                             <Col md={8} xs={4}>
                                 <div className='d-flex align-items-end w-100 h-100 justify-content-end'>
+                                    {/* Debut du formulaire */}
                                     <FormNumeroContent>
                                         <Formik
                                             initialValues={{
@@ -115,7 +151,7 @@ export default function () {
                                                 digit_3: '',
                                                 digit_4: '',
                                             }}
-                                            onSubmit={(values: Idigit) => handleSubmitForm(values)}
+                                            onSubmit={(values: Idigit, { resetForm }) => handleSubmitForm(values, resetForm)}
                                             validationSchema={validationSchema}
                                         >
                                             {({ values, handleChange, handleSubmit, errors, touched, setFieldValue }) => (
@@ -192,6 +228,7 @@ export default function () {
                                             )}
                                         </Formik>
                                     </FormNumeroContent>
+                                    {/* Fin du formulaire */}
                                 </div>
                             </Col>
                         </Row>

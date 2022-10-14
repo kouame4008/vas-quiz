@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import Spinner from '../../../public/assets/spinner.svg';
+import Spinner from '../../../public/assets/loader.gif';
 
 
 

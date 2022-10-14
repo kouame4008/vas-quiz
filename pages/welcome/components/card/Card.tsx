@@ -30,10 +30,8 @@ const Card = ({
     return (
         <CardBody color={color}>
             <div style={{ flex: 1 }}>
-                <h3 style={{ fontSize: '16px', fontWeight: 600 }}> {title} </h3>
+                <h3 style={{ fontSize: '16px', fontWeight: 600 , textTransform: 'uppercase'}}> {title} </h3>
                 <span>
-                    {/* Découvrez votre  <br />
-                    meilleure score et <br /> votre rang dans le jeu */}
                     {description}
                 </span>
                 <div className='mt-3'>

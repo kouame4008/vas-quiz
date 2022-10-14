@@ -1,16 +1,10 @@
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { Row, Col, Navbar } from 'react-bootstrap';
-import Header from '../shared/components/header/Header';
-import AppLayout from '../shared/layouts/AppLayout';
+import { Row, Col } from 'react-bootstrap';
 import {
   Section,
   SectionTop,
-  Logo,
-  UserInfoContent,
   SectionTopContent,
-  Circle,
-  ContentCircle,
   ContentTxt,
   IntoTitle,
   IntoSubTitle,
@@ -19,33 +13,63 @@ import {
 import {
   Formik,
   Form,
-  Field,
 } from 'formik';
 import * as Yup from 'yup';
-import { FormError, InputItemField, InputItemNumberField } from '../shared/components/formComponent';
+import { FormError, InputItemField } from '../shared/components/formComponent';
 import { QBActive } from '../shared/components/header/css/Buttons';
-import LogoQuiz from '../public/assets/Header-logo-blue.png';
 import LayoutBlanc from '../shared/layouts/LayoutBlanc';
+import useCategorie from './api/categorie/use-categories';
+import { login_user_by_phone_number } from './api/user/user-actions';
+import { notification } from 'antd';
 
+// REgex numero orange
 const phoneRegExp = /(07)[1-9]*(\d)/;
 
-export default function () {
+// demarage de la page
+const Accueil = () => {
+  // router pour gerer la navigation des pages
   const router = useRouter()
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmitForm = (values: { numero: string }) => {
-    setLoading(true)
-    router.push('/verifier-otp')
+  const { categories, chargementCategories } = useCategorie();
+
+  // handleSubmitForm permet de soumettre de formulaire
+  const handleSubmitForm = (values: { phone_number: string }) => {
+    setLoading(true);
+    let data = {
+      phone_number: values.phone_number
+    }
+
+    login_user_by_phone_number(data).then((res) => {
+      setLoading(false);
+      if (res.status == 'succes') {
+
+        // Enregistrement dans la session
+        localStorage.setItem('OTP', res.opt);
+        localStorage.setItem('PHONE_NUMBER', values.phone_number);
+
+        router.push('/verifier-otp')
+      }
+    }).catch(() => {
+      notification.error({
+        description: 'Erreur server !',
+        message: 'Error',
+        placement: 'bottomRight'
+      })
+    })
   }
 
+  // validationSchema permet de valider les champs du formulaire
   const validationSchema = Yup.object().shape({
-    numero: Yup.string()
+    phone_number: Yup.string()
       .required('Le champ numero de telephone est requis')
       .min(10, 'Le numero de telephone est de 10 caractères')
       .max(10, 'Le numero de telephone est de 10 caractères')
       .matches(phoneRegExp, 'Le numero de telephone doit commencer par (07)')
   });
 
+  // controlText permets de filtre et retirer les caracteres alphabetique lorsque le client 
+  // tape sur le clivier pour entrer sont numero
   const controlText = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value: inputValue } = e.target;
     const reg = /^-?\d*(\.\d*)?$/;
@@ -64,7 +88,7 @@ export default function () {
               <Col md={5} xs={4}>
                 <ContentTxt>
                   <section>
-                    <IntoTitle style={{ fontSize: '56px', color: '#000' }}>
+                    <IntoTitle style={{ fontSize: '56px', color: '#004E9C' }}>
                       Joue. <br /> Apprends. <br /> Gagne.
                     </IntoTitle>
                     <IntoSubTitle style={{ color: '#000' }}>
@@ -79,12 +103,13 @@ export default function () {
               </Col>
               <Col md={7} xs={4}>
                 <div className='d-flex align-items-end w-100 h-100 justify-content-end'>
+                  {/* debut du Formnulaire */}
                   <FormNumeroContent>
                     <Formik
                       initialValues={{
-                        numero: '',
+                        phone_number: '',
                       }}
-                      onSubmit={(values: { numero: string }) => handleSubmitForm(values)}
+                      onSubmit={(values: { phone_number: string }) => handleSubmitForm(values)}
                       validationSchema={validationSchema}
                     >
                       {({ values, handleChange, handleSubmit, errors, touched, setFieldValue }) => (
@@ -94,9 +119,9 @@ export default function () {
                               <Col md={10} style={{ paddingLeft: '0' }}>
                                 <label htmlFor="firstName">Enregistre toi avec ton numéro de téléphone. <sup>*</sup></label>
                                 <InputItemField
-                                  value={values.numero}
+                                  value={values.phone_number}
                                   onChange={(e) => {
-                                    controlText(e) === true && setFieldValue('numero', e.target.value)
+                                    controlText(e) === true && setFieldValue('phone_number', e.target.value)
                                   }}
                                   placeholder="Ex: 0777952356"
                                   type='tel'
@@ -117,7 +142,7 @@ export default function () {
                               </Col>
                               <Col md={12}>
                                 <FormError>
-                                  {touched.numero && errors.numero && <div>{errors.numero}</div>}
+                                  {touched.phone_number && errors.phone_number && <div>{errors.phone_number}</div>}
                                 </FormError>
                               </Col>
                             </Row>
@@ -127,6 +152,7 @@ export default function () {
                       )}
                     </Formik>
                   </FormNumeroContent>
+                  {/* Fin du Formulaire */}
                 </div>
               </Col>
             </Row>
@@ -136,3 +162,5 @@ export default function () {
     </LayoutBlanc>
   )
 }
+
+export default Accueil;

@@ -1,10 +1,10 @@
 import React from 'react';
 import { Navbar } from 'react-bootstrap';
 import Header from '../components/header/Header';
-import AppLayout from './AppLayout';
 import LogoQuiz from '../../public/assets/Header-logo-blue.png';
 import styled from 'styled-components';
 import FooterBottom from '../components/footer/FooterBottom';
+import AppNoFooter from './AppNoFooter';
 
 const Fade = require('react-reveal/Fade')
 
@@ -17,7 +17,7 @@ const Bottom = styled.div`
 
 const LayoutBlanc = ({ children }: { children: React.ReactNode }) => {
     return (
-        <AppLayout title='Quiz' description='Quiz'>
+        <AppNoFooter title='Quiz' description='Quiz'>
             <Navbar style={{ boxShadow: 'rgba(0, 0, 0, 0.01) 0px 10px 27px' }}>
                 <Header logo={LogoQuiz} />
             </Navbar>
@@ -31,7 +31,7 @@ const LayoutBlanc = ({ children }: { children: React.ReactNode }) => {
             <Bottom>
                 <FooterBottom />
             </Bottom>
-        </AppLayout>
+        </AppNoFooter>
 
     )
 }

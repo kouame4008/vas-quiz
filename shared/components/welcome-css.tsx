@@ -120,7 +120,7 @@ export const CirclePlus = styled.div`
 
 export const FormNumeroContent = styled.div`
   padding: 30px 25px;
-  background: ${greyColor};
+  background: ${bleuOpac};
   border-radius: 16px;
 `;
 

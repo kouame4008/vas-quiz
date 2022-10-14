@@ -1,7 +1,7 @@
 import { Modal, Typography } from "antd";
 import React from "react";
 import styled from "styled-components";
-import { IModalChoisirFormule } from "../interface/Interface";
+import { IModalChoisirFormule } from "../../../pages/api/config/interface/Interface";
 
 
 
@@ -9,7 +9,7 @@ import { IModalChoisirFormule } from "../interface/Interface";
 const {Title} = Typography;
 
 const ModalQuiz = styled(Modal)`
-    background : #F0F0F0;
+    background : rgba(153, 210, 227, 1);
     border-radius: 28px;
 
     .ant-modal-header {
@@ -30,6 +30,8 @@ const QuizModal = ({
     children,
     visible,
     close,
+    width,
+    style
 }: IModalChoisirFormule) => {
     return (
         <ModalQuiz
@@ -38,6 +40,8 @@ const QuizModal = ({
             onCancel={close}
             footer={false}
             maskClosable={false}
+            width= {typeof width !== 'undefined' ? width : '520px'}
+            style={style}
         >
             {children}
         </ModalQuiz>
