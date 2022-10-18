@@ -252,7 +252,7 @@ const Questions = ({ title, next, prev, current, steps, done, seconds, minutes, 
                                 <SectionQuestion
                                     onClick={() => {
                                         if (!selectReponse) {
-                                            reponse(item.id)
+                                            reponse(item)
                                             setCurrentReponse(item.id);
                                             setSelectReponse(true);
                                             setItemCurrent(item);

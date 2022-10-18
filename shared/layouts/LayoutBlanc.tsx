@@ -19,7 +19,7 @@ const LayoutBlanc = ({ children }: { children: React.ReactNode }) => {
     return (
         <AppNoFooter title='Quiz' description='Quiz'>
             <Navbar style={{ boxShadow: 'rgba(0, 0, 0, 0.01) 0px 10px 27px' }}>
-                <Header logo={LogoQuiz} />
+                <Header type='#' logo={LogoQuiz} />
             </Navbar>
 
             <section style={{ marginTop: '1rem' }}>

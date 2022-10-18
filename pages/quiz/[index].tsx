@@ -1,22 +1,24 @@
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import {
+    IntoTitle,
     Section,
     SectionTop,
 } from '../../shared/components/welcome-css';
-import { Steps, notification, Spin } from 'antd';
+import { Steps, notification, Spin, PageHeader } from 'antd';
 import Questions from '../../shared/components/steps/Questions';
 import styled from 'styled-components';
 import { useTimer } from 'react-timer-hook';
 import LayoutBlanc from '../../shared/layouts/LayoutBlanc';
 import { ModalExpiredTimer } from '../../shared/components/modal/QuizModalActions';
 import Timer from '../../shared/components/steps/Timer';
-import { enregistrer_score, envoi_de_la_reponse, liste_questions } from '../api/pack/pack-actions';
+import { envoi_de_la_reponse, liste_questions } from '../api/pack/pack-actions';
 import { useSelector } from 'react-redux';
 import { v4 } from 'uuid';
-import { ENVOI_DE_LA_REPONSE_URL } from '../api/config/ApiRouter';
 import { useDispatch } from 'react-redux';
 import { setScoreData } from '../../features/score.slice';
+import congratulation from '../../public/assets/congratulation.gif';
+import { QBActive } from '../../shared/components/header/css/Buttons';
 
 
 const Fade = require("react-reveal/Fade")
@@ -26,6 +28,18 @@ const QSteps = styled(Steps)`
     .ant-steps-item {
         display : none;
     }
+`;
+
+const Congratulation = styled.div`
+    position: absolute;
+    background: ${(props: { type: boolean }) => props.type && `url(${congratulation.src})`};
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0.3;
+    z-index: 0;
+    background-size : cover;
 `;
 
 interface IQuestionResponse {
@@ -57,11 +71,17 @@ export default function () {
     const dispatch = useDispatch();
     const [totalQuestion, setTotalQuestion] = useState(0);
     const [totalrepondu, settotalrepondu] = useState(0);
+    const [congratulationVisible, setCongratulationVisible] = useState(false);
+    const msg = new SpeechSynthesisUtterance()
 
     React.useEffect(() => {
         handlegetListeQuestions();
     }, []);
 
+    const speechHandler = (text: string) => {
+        msg.text = text
+        window && window.speechSynthesis.speak(msg)
+    }
 
 
     const handlegetListeQuestions = () => {
@@ -90,6 +110,9 @@ export default function () {
 
     const next = () => {
         setExpiredModal(false);
+        if (congratulationVisible === true) {
+            setCongratulationVisible(false)
+        }
 
         const time = new Date();
         time.setSeconds(time.getSeconds() + 20);
@@ -155,10 +178,18 @@ export default function () {
         )
     }
 
-    const handleChoisirReponse = (reponseId: number) => {
+    const handleChoisirReponse = (reponse: any) => {
+        if (reponse.correct === 1) {
+            setCongratulationVisible(true);
+            speechHandler('Félicitation, vous pouvez passer à la question suivante');
+        }
+        else {
+            speechHandler('Mauvaise reponse !');
+        }
+
         let newElement: IQuestionResponse = {
             question_id: questions && questions[current].id,
-            answer_id: reponseId,
+            answer_id: reponse.id,
             subscription_id: souscription_id
         }
         // oldreponse.push(newElement)
@@ -167,6 +198,10 @@ export default function () {
         envoi_de_la_reponse(newElement).then((res: any) => {
             if (res.status === 'succes') {
                 dispatch(setScoreData({ points: res.data.nb_points }))
+                if (questions) {
+                    if (current === (questions.length - 1))
+                        speechHandler('Félicitation, vous avez repondu a toutes les question. Cliquez sur le bouton terminer pour voir votre score.');
+                }
                 return true;
             }
             else {
@@ -189,7 +224,12 @@ export default function () {
         // envoi de la reponse au backend 
         envoi_de_la_reponse(newElement).then((res: any) => {
             if (res.status === 'succes') {
-                dispatch(setScoreData({ points: res.data.nb_points }))
+                dispatch(setScoreData({ points: res.data.nb_points }));
+
+                if (questions) {
+                    if (current === (questions.length - 1))
+                        speechHandler('Félicitation, vous avez repondu a toutes les question. Cliquez sur le bouton terminer pour voir votre score.');
+                }
                 return true;
             }
             else {
@@ -209,32 +249,51 @@ export default function () {
         }
     }
 
+    const handleGotoHomePage = () => {
+        router.push(`/welcome/${v4()}`)
+    }
+
     return (
         <LayoutBlanc>
             <Section>
-                <Timer />
-                <SectionTop color='FFF'>
-                    <>
-                        <QSteps current={current} >
-                            {questions && questions.map((item: any) => (
-                                <Step key={item.libelle} title={item.libelle} />
-                            ))}
-                        </QSteps>
-                        <div className="steps-content">
-                            {StepContentComponent()}
-                        </div>
-                    </>
-                </SectionTop>
+                <div style={{ zIndex: 1, position: 'relative' }}>
+                    <SectionTop color='FFF'>
+                        <PageHeader
+                            title={<IntoTitle style={{ fontSize: '26px', color: '#004E9C', textAlign: 'center' }}>
+                                Liste des Questions
+                            </IntoTitle>}
+                            onBack={() => handleGotoHomePage()}
+                            extra={[
+                                <QBActive onClick={() => handleGotoHomePage()}>
+                                    Retour a l'accueil
+                                </QBActive>
+                            ]}
+                        />
+                        <Timer />
 
-                {expiredModal &&
-                    <ModalExpiredTimer
-                        visible={expiredModal}
-                        close={() => { }}
-                        handleOk={handleTimeExpire}
-                        current={[current, questions && questions.length]}
-                        loading={false}
-                    />
-                }
+                        <>
+                            <QSteps current={current} >
+                                {questions && questions.map((item: any) => (
+                                    <Step key={item.libelle} title={item.libelle} />
+                                ))}
+                            </QSteps>
+                            <div className="steps-content">
+                                {StepContentComponent()}
+                            </div>
+                        </>
+                    </SectionTop>
+
+                    {expiredModal &&
+                        <ModalExpiredTimer
+                            visible={expiredModal}
+                            close={() => { }}
+                            handleOk={handleTimeExpire}
+                            current={[current, questions && questions.length]}
+                            loading={false}
+                        />
+                    }
+                </div>
+                {congratulationVisible && <Congratulation type={congratulationVisible} />}
             </Section>
         </LayoutBlanc>
 

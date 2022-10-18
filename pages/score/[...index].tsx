@@ -1,4 +1,4 @@
-import { Divider, notification, Space } from 'antd';
+import { Divider, notification, PageHeader, Space } from 'antd';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
@@ -13,6 +13,8 @@ import { souscription_pack } from '../api/pack/pack-actions';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
 import { v4 } from 'uuid';
+import { IntoTitle } from '../../shared/components/welcome-css';
+import { QBActive } from '../../shared/components/header/css/Buttons';
 
 
 const ScorePanel = styled.div`
@@ -108,9 +110,25 @@ const MonScore = () => {
         router.push(`/quiz/${currentSuscription}|${v4()}|${date.getTime()}`)
     }
 
+    const handleGotoHomePage = () => {
+        router.push(`/welcome/${v4()}`)
+    }
+
     return (
         <LayoutBlanc>
             <Container>
+                <PageHeader
+                    title={<IntoTitle style={{ fontSize: '26px', color: '#004E9C', textAlign: 'center' }}>
+                        Classement
+                    </IntoTitle>}
+                    onBack={() => handleGotoHomePage()}
+                    extra={[
+                        <QBActive onClick={() => handleGotoHomePage()}>
+                            Retour a l'accueil
+                        </QBActive>
+                    ]}
+                />
+
                 <Row className='mt-4'>
                     <Col md={3}>
                         <ScorePanel>
