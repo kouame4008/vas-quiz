@@ -54,6 +54,11 @@ export const QBdefaultPadding = styled(Button)`
         -webkit-transition: all ease-in .3s;
         background : transparent;
     }
+
+    @media (max-width : 500px) {
+        border : 0;
+        width : 100%;
+    }
 `;
 
 export const QBActive = styled(Button)`
@@ -82,5 +87,10 @@ export const QBActive = styled(Button)`
         -moz-transition: all ease-in .3s;
         -webkit-transition: all ease-in .3s;
         border : 0 !important;
+    }
+
+    @media (max-width : 500px) {
+        margin-top : 10px;
+        width : 100%;
     }
 `;

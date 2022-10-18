@@ -29,8 +29,10 @@ export const UserInfoContent = styled.div`
   flex-direction : column;
   text-align : right;
 
-  small {
+  small {}
 
+  @media (max-width : 500px) {
+    display : none;
   }
 `;
 
@@ -64,6 +66,9 @@ export const IntoTitle = styled.h3`
   font-weight: 600;
   margin-bottom: 1.3rem;
   color :#FFF;
+  @media (max-width : 500px) {
+    font-size : 30px !important;
+  }
 `;
 
 export const IntoSubTitle = styled.div`
@@ -77,7 +82,7 @@ export const SectionMain = styled.section`
 
 export const CardBody = styled.div`
   border-radius : 20px;
-  background : ${(props:{color : string;}) => props.color};
+  background : ${(props: { color: string; }) => props.color};
   padding : 1rem;
   display : flex;
   cursor: pointer;

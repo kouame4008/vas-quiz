@@ -85,7 +85,7 @@ const Accueil = () => {
         <SectionTop color='FFF'>
           <SectionTopContent>
             <Row>
-              <Col md={5} xs={4}>
+              <Col md={5} xs={12}>
                 <ContentTxt>
                   <section>
                     <IntoTitle style={{ fontSize: '56px', color: '#004E9C' }}>
@@ -101,7 +101,7 @@ const Accueil = () => {
                   </section>
                 </ContentTxt>
               </Col>
-              <Col md={7} xs={4}>
+              <Col md={7} xs={12}>
                 <div className='d-flex align-items-end w-100 h-100 justify-content-end'>
                   {/* debut du Formnulaire */}
                   <FormNumeroContent>
@@ -116,7 +116,7 @@ const Accueil = () => {
                         <Form>
                           <div className="current-steep-content">
                             <Row>
-                              <Col md={10} style={{ paddingLeft: '0' }}>
+                              <Col md={10}>
                                 <label htmlFor="firstName">Enregistre toi avec ton numéro de téléphone. <sup>*</sup></label>
                                 <InputItemField
                                   value={values.phone_number}

@@ -1,7 +1,7 @@
 import { Avatar, Button, Skeleton, Space, Typography } from "antd";
 import { CardBody, Circle } from "../welcome-css";
 import { QBActive, QBdefaultPadding } from "../header/css/Buttons";
-import { IModalChoisirFormule } from "../../../pages/api/config/interface/Interface";
+import { IModalChoisirFormule, ISessionExpirer } from "../../../pages/api/config/interface/Interface";
 import QuizModal from "./QuizModal"
 import Image from "next/image";
 import Img_carte_Formule_normale from '../../../public/assets/Img_carte_Formule_normale.png';
@@ -30,6 +30,15 @@ const SpanColor = styled.span`
 `;
 
 const Fade = require('react-reveal/Fade');
+
+const FormuleImage = styled.div`
+    width : 150px;
+    height : 150px;
+
+    @media (max-width : 500px) {
+        display : none;
+    }
+`;
 
 
 export const ModalChoisirOptions = ({
@@ -61,13 +70,13 @@ export const ModalChoisirOptions = ({
                     </div>
 
                 </div>
-                <div style={{ width: '150px', height: '150px' }}>
+                <FormuleImage>
                     {currentItem && <Image
                         src={Img_carte_Formule_normale.src}
                         width={Img_carte_Formule_normale.width}
                         height={Img_carte_Formule_normale.height}
                     />}
-                </div>
+                </FormuleImage>
             </CardBody>
             <div style={{ padding: '1rem' }}>
                 <strong className="mb-2 d-flex">Veuillez choisir une catégorie (<strong className="text-danger">*</strong>) </strong>
@@ -95,21 +104,22 @@ export const ModalChoisirOptions = ({
                 {radio &&
                     <Fade bottom>
                         <div className='mt-2'>
-                            <Space>
-                                <QBActive
-                                    onClick={() => handleOk(currentItem, currentCategorie)}
-                                    loading={loading && loading}
-                                    disabled={loading && loading}
-                                >
-                                    PAYER MAINTENANT ({currentItem && currentItem.montant} FCFA)
-                                </QBActive>
+                            {/* <Space> */}
+                            <QBActive
+                                onClick={() => handleOk(currentItem, currentCategorie)}
+                                loading={loading && loading}
+                                disabled={loading && loading}
+                                style={{ marginRight: '5px' }}
+                            >
+                                PAYER MAINTENANT ({currentItem && currentItem.montant} FCFA)
+                            </QBActive>
 
-                                <QBdefaultPadding
-                                    onClick={close}
-                                >
-                                    ANNULER
-                                </QBdefaultPadding>
-                            </Space>
+                            <QBdefaultPadding
+                                onClick={close}
+                            >
+                                ANNULER
+                            </QBdefaultPadding>
+                            {/* </Space> */}
                         </div>
                     </Fade>}
             </div>
@@ -144,7 +154,7 @@ export const ModalDemarrerLeJeu = ({
                     />}
                 </div>
                 <div style={{ flex: 1 }}>
-                    <h3 style={{ fontSize: '23px', fontWeight: 600, textTransform: 'uppercase', fontFamily: 'Market',color:'#004E9C' }}> Félicitation </h3>
+                    <h3 style={{ fontSize: '23px', fontWeight: 600, textTransform: 'uppercase', fontFamily: 'Market', color: '#004E9C' }}> Félicitation </h3>
                     <div>
                         Vous venez de souscrire au (<strong>PACK {currentItem && currentItem.type_pack}</strong>),
                         Vous avez ete debite <br /> de  <SpanColor><strong> {currentItem && currentItem.montant} FCFA</strong></SpanColor>
@@ -153,7 +163,7 @@ export const ModalDemarrerLeJeu = ({
                     <div className='mt-4'>
                         <Fade bottom>
                             <div>
-                                <Space>
+                                <Space direction="vertical">
                                     <QBActive
                                         onClick={() => handleOk()}
                                         loading={loading && loading}
@@ -161,6 +171,17 @@ export const ModalDemarrerLeJeu = ({
                                     >
                                         Commencer Maintenant
                                     </QBActive>
+
+                                    <QBdefaultPadding
+                                        onClick={() => close()}
+                                        loading={loading && loading}
+                                        disabled={loading && loading}
+                                        style={{
+                                            border : 0
+                                        }}
+                                    >
+                                        Commencer plus tard
+                                    </QBdefaultPadding>
                                 </Space>
                             </div>
                         </Fade>
@@ -181,7 +202,8 @@ export const ModalExpiredTimer = ({
     close,
     handleOk,
     loading,
-}: IModalChoisirFormule) => {
+    current
+}: ISessionExpirer) => {
 
     return (
         <QuizModal
@@ -189,29 +211,38 @@ export const ModalExpiredTimer = ({
             close={close}
         >
             <CardBody color="transparent">
-                <div style={{ width: '150px' }}>
-                    <Circle dimension='150px' />
-                </div>
+                {/* <div style={{ width: '150px' }}>
+/                    <Circle dimension='150px' />
+                </div> */}
                 <div style={{ flex: 1, padding: '1rem' }}>
-                    <h3 style={{ fontSize: '20px', fontWeight: 600 }}> Votre temps est ecoulé </h3>
+                    <h3 style={{ fontSize: '20px', fontWeight: 600 }}> Votre temps de reponse pour <br />
+                        <SpanColor style={{ marginTop: '2px', display: 'inline-block' }}><small>la question {current && current[0] + 1}</small></SpanColor> est ecoulé </h3>
                     <span>
                         Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium,
                     </span>
                     <div className='mt-2'>
                         <Space>
-                            <QBActive
-                                onClick={() => handleOk()}
-                                loading={loading && loading}
-                                disabled={loading && loading}
-                            >
-                                CONTINUER
-                            </QBActive>
 
-                            <QBdefaultPadding
-                                onClick={close}
-                            >
-                                ANNULER
-                            </QBdefaultPadding>
+
+                            {current && current[0] !== current[1] - 1 &&
+                                <QBActive
+                                    onClick={() => handleOk()}
+                                    loading={loading && loading}
+                                    disabled={loading && loading}
+                                >
+                                    QUESTION {current && current[0] + 2}
+                                </QBActive>
+                            }
+
+                            {current && current[0] === current[1] - 1 &&
+                                <QBActive
+                                    onClick={() => handleOk()}
+                                    loading={loading && loading}
+                                    disabled={loading && loading}
+                                >
+                                    TERMINER
+                                </QBActive>
+                            }
                         </Space>
                     </div>
                 </div>

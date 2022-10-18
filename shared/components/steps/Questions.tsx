@@ -52,6 +52,10 @@ const ReponseContent = styled.div`
         font-size: 30px;
         color : ${(props: { color: string | null }) => props.color && props.color}
     }
+
+    @media (max-width : 500px) {
+        flex-direction : column;
+    }
 `;
 
 const QTag = styled(Tag)`
@@ -60,6 +64,15 @@ const QTag = styled(Tag)`
 `;
 
 const { Title } = Typography;
+
+const QuizHeader = styled.div`
+    display : flex;
+    justify-content : space-between;
+    @media (max-width : 500px) {
+        flex-direction : column;
+    }
+`;
+
 
 
 
@@ -73,6 +86,9 @@ interface IQuestions {
     seconds: number;
     minutes: number;
     questions: any;
+    reponse: Function;
+    numeroQuestion: number,
+    totalQuestion : number
 };
 
 const TYPE_REPONSE = {
@@ -99,7 +115,7 @@ interface IReponse {
 }
 
 
-const Questions = ({ title, next, prev, current, steps, done, seconds, minutes, questions }: IQuestions) => {
+const Questions = ({ title, next, prev, current, steps, done, seconds, minutes, questions, reponse, numeroQuestion, totalQuestion }: IQuestions) => {
     const [currentReponse, setCurrentReponse] = React.useState<number>(0);
     const [selectReponse, setSelectReponse] = useState(false);
     const [itemCurrent, setItemCurrent] = useState<IReponse>();
@@ -137,13 +153,13 @@ const Questions = ({ title, next, prev, current, steps, done, seconds, minutes, 
         if (TYPE_REPONSE.SUCCESS === item.correct) {
             let calculPonts = TYPE_POINTS_PAR_REPONSE.SUCCESS + parseInt(nombreDePoints)
             console.log(calculPonts)
-            dispatch(setScoreData({ points: calculPonts }))
+            // dispatch(setScoreData({ points: calculPonts }))
         }
         // mise a jour du score si mauvaise reponse
         else {
             let calculPonts = TYPE_POINTS_PAR_REPONSE.ECHEC + parseInt(nombreDePoints)
             console.log(calculPonts)
-            dispatch(setScoreData({ points: calculPonts }))
+            // dispatch(setScoreData({ points: calculPonts }))
         }
     }
 
@@ -178,13 +194,13 @@ const Questions = ({ title, next, prev, current, steps, done, seconds, minutes, 
 
     return (
         <SectionTopContent>
-            <div className='d-flex justify-content-between'>
+            <QuizHeader>
                 <Title level={3} style={{ color: '#004E9C' }}>
                     <div><span>{questions && questions.libelle}  </span></div>
                     <div>
                         <Space>
                             <QTag color='cyan'>Cuture Generale</QTag>
-                            <QTag color='red'>Question : {current + 1}/{steps}</QTag>
+                            <QTag color='red'>Question : {numeroQuestion}/{totalQuestion}</QTag>
                         </Space>
                     </div>
                 </Title>
@@ -196,7 +212,6 @@ const Questions = ({ title, next, prev, current, steps, done, seconds, minutes, 
                             <Button style={{
                                 background: '#0090B81A 0% 0% no-repeat padding-box',
                                 border: 0,
-
                             }}>
                                 <strong>Votre score</strong>
                             </Button>
@@ -216,9 +231,9 @@ const Questions = ({ title, next, prev, current, steps, done, seconds, minutes, 
                         </SpanCunter>
                     </Space>
                 </span>
-            </div>
+            </QuizHeader>
             <Row className='pt-4' style={{ borderTop: '1px solid rgba(0,0,0,.1)', borderBottom: '1px solid rgba(0,0,0,.1)' }}>
-                <Col md={4} xs={4}>
+                <Col md={4} xs={12}>
                     <ContentTxt style={{ alignItems: 'flex-start' }}>
                         <section>
                             <IntoSubTitle style={{ color: '#000' }}>
@@ -230,14 +245,14 @@ const Questions = ({ title, next, prev, current, steps, done, seconds, minutes, 
                         </section>
                     </ContentTxt>
                 </Col>
-                <Col md={12}>
+                <Col md={12} xs={12}>
                     <Row>
                         {questions && questions.answers.map((item: any, index: number) => (
                             <Col md={4}>
                                 <SectionQuestion
                                     onClick={() => {
                                         if (!selectReponse) {
-                                            console.log(item)
+                                            reponse(item.id)
                                             setCurrentReponse(item.id);
                                             setSelectReponse(true);
                                             setItemCurrent(item);
@@ -286,7 +301,7 @@ const Questions = ({ title, next, prev, current, steps, done, seconds, minutes, 
 
                             {current !== steps - 1 &&
                                 <QBActive
-                                    onClick={() => next()}
+                                    onClick={() => next(itemCurrent?.id)}
                                 >
                                     <Space>
                                         <span>QUESTION SUIVANTE</span>

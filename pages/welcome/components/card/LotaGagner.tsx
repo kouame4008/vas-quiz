@@ -35,7 +35,7 @@ const LotaGagner = () => {
         <React.Fragment>
             <Row className='pt-4'>
                 {lots.map((item, i) => (
-                    <Col md={3}>
+                    <Col md={3} xs={6} className='my-2'>
                         <div className='w-100 d-flex justify-content-center align-content-center'>
                             <div>
                                 <Image
@@ -51,7 +51,7 @@ const LotaGagner = () => {
                         <LotSubText dangerouslySetInnerHTML={createMarkup(item.description)} />
                     </Col>
                 ))}
-                <Col md={3}>
+                <Col md={3} xs={6} className='my-2'>
                     <div className='w-100 d-flex justify-content-center align-content-center'>
                         <CirclePlus dimension='151px'>
                             <Image

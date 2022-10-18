@@ -18,8 +18,8 @@ export const login_user_check_otp = async (data: { otp: string; phone_number: st
         }
 
         return res.data
-    }).catch(() => {
-        return { status: 'Error', message: "Network error" }
+    }).catch((err:any) => {
+        return { status: err?.response?.data?.status, message: err?.response?.data?.message }
     })
 }
 

@@ -41,7 +41,7 @@ const Formule = ({
         <Spin spinning={chargementPacks}>
             <Row>
                 {cardData.map((item, index) => (
-                    <Col md={4} key={index} onClick={() => { router.push(`/score/${v4()}`) }}>
+                    <Col md={4} key={index} onClick={() => { router.push(`/score/${v4()}`) }} className='my-2'>
                         <Card
                             title={item.title}
                             description={item.description}
@@ -55,7 +55,7 @@ const Formule = ({
                 {typeof packs !== 'undefined' &&
                     <>
                         {packs && packs.map((item: IPack, index: number) => (
-                            <Col md={4} key={index} onClick={() => handleOpenModal(index, item)}>
+                            <Col md={4} key={index} onClick={() => handleOpenModal(index, item)} className='my-2'>
                                 <Card
                                     title={item.type_pack}
                                     description={`Cette formule vous donne droit à un pack de (${item.nombre_question}) question(s).`}

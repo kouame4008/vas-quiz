@@ -121,3 +121,17 @@ a {
   justify-content: center !important;
   height: 100% !important;
 }
+
+.welcome-img {
+  @media (max-width : 500px) {
+    display: none !important;
+  }
+}
+
+.ant-page-header-back {
+  margin-right: 16px;
+  line-height: 1;
+  font-size: 20px;
+  position: relative;
+  top: -6px;
+}

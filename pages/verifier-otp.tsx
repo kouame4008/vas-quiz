@@ -24,6 +24,16 @@ import { v4 } from 'uuid';
 import { login_user_check_otp } from './api/user/user-actions';
 import { useDispatch } from 'react-redux';
 import { setUserData } from '../features/user.slice';
+import styled from 'styled-components';
+
+
+const DigitFlex = styled.div`
+    width : 100%;
+    @media (max-width : 500px) {
+        display : flex;
+        justify-content : center;
+    }
+`;
 
 
 
@@ -73,10 +83,11 @@ export default function () {
                     description: res.message
                 })
             }
-        }).catch(() => {
+        }).catch((err: any) => {
             notification.error({
-                message: 'Error',
-                description: 'Network Error'
+                message: err.status,
+                description: err.message,
+                placement: 'bottomRight'
             })
         });
 
@@ -123,7 +134,7 @@ export default function () {
                 <SectionTop color='FFF'>
                     <SectionTopContent>
                         <Row>
-                            <Col md={4} xs={4}>
+                            <Col md={4} xs={12}>
                                 <ContentTxt>
                                     <section>
                                         <IntoTitle style={{ fontSize: '56px', color: '#004E9C' }}>
@@ -140,8 +151,8 @@ export default function () {
                                     </section>
                                 </ContentTxt>
                             </Col>
-                            <Col md={8} xs={4}>
-                                <div className='d-flex align-items-end w-100 h-100 justify-content-end'>
+                            <Col md={8} xs={12}>
+                                <div className='d-md-flex align-items-end w-100 h-100 justify-content-end'>
                                     {/* Debut du formulaire */}
                                     <FormNumeroContent>
                                         <Formik
@@ -160,57 +171,61 @@ export default function () {
                                                         <Row>
                                                             <Col md={7} style={{ paddingLeft: '0' }}>
                                                                 <label style={{ width: '100%' }} htmlFor="firstName">Saisis le code reçu par SMS pour valider ton inscription.. <sup>*</sup></label>
-                                                                <Space>
-                                                                    <InputItemField
-                                                                        style={{ width: '50px', textAlign: 'center' }}
-                                                                        value={values.digit_1}
-                                                                        onChange={(e) => {
-                                                                            controlText(e) === true && setFieldValue('digit_1', e.target.value)
-                                                                        }}
-                                                                    />
+                                                                <DigitFlex>
+                                                                    <Space>
+                                                                        <InputItemField
+                                                                            style={{ width: '50px', textAlign: 'center' }}
+                                                                            value={values.digit_1}
+                                                                            onChange={(e) => {
+                                                                                controlText(e) === true && setFieldValue('digit_1', e.target.value)
+                                                                            }}
+                                                                        />
 
-                                                                    <InputItemField
-                                                                        style={{ width: '50px', textAlign: 'center' }}
-                                                                        value={values.digit_2}
-                                                                        onChange={(e) => {
-                                                                            controlText(e) === true && setFieldValue('digit_2', e.target.value)
-                                                                        }}
-                                                                    />
+                                                                        <InputItemField
+                                                                            style={{ width: '50px', textAlign: 'center' }}
+                                                                            value={values.digit_2}
+                                                                            onChange={(e) => {
+                                                                                controlText(e) === true && setFieldValue('digit_2', e.target.value)
+                                                                            }}
+                                                                        />
 
-                                                                    <InputItemField
-                                                                        style={{ width: '50px', textAlign: 'center' }}
-                                                                        value={values.digit_3}
-                                                                        onChange={(e) => {
-                                                                            controlText(e) === true && setFieldValue('digit_3', e.target.value)
-                                                                        }}
-                                                                    />
+                                                                        <InputItemField
+                                                                            style={{ width: '50px', textAlign: 'center' }}
+                                                                            value={values.digit_3}
+                                                                            onChange={(e) => {
+                                                                                controlText(e) === true && setFieldValue('digit_3', e.target.value)
+                                                                            }}
+                                                                        />
 
-                                                                    <InputItemField
-                                                                        style={{ width: '50px', textAlign: 'center' }}
-                                                                        value={values.digit_4}
-                                                                        onChange={(e) => {
-                                                                            controlText(e) === true && setFieldValue('digit_4', e.target.value)
-                                                                        }}
-                                                                    />
-                                                                </Space>
+                                                                        <InputItemField
+                                                                            style={{ width: '50px', textAlign: 'center' }}
+                                                                            value={values.digit_4}
+                                                                            onChange={(e) => {
+                                                                                controlText(e) === true && setFieldValue('digit_4', e.target.value)
+                                                                            }}
+                                                                        />
+                                                                    </Space>
+                                                                </DigitFlex>
                                                             </Col>
                                                             <Col md={5}>
                                                                 <div
-                                                                    className='d-flex align-items-end h-100 justify-content-center'
+                                                                    className='d-md-flex align-items-end h-100 justify-content-center'
                                                                 >
-                                                                    <Space>
-                                                                        <QBdefaultPadding>
-                                                                            renvoyer le code
-                                                                        </QBdefaultPadding>
+                                                                    {/* <Space> */}
+                                                                    <QBActive
+                                                                        onClick={() => handleSubmit()}
+                                                                        loading={loading}
+                                                                        disabled={loading}
+                                                                        style={{ marginRight: '5px' }}
+                                                                    >
+                                                                        VALIDER
+                                                                    </QBActive>
 
-                                                                        <QBActive
-                                                                            onClick={() => handleSubmit()}
-                                                                            loading={loading}
-                                                                            disabled={loading}
-                                                                        >
-                                                                            VALIDER
-                                                                        </QBActive>
-                                                                    </Space>
+                                                                    <QBdefaultPadding>
+                                                                        renvoyer le code
+                                                                    </QBdefaultPadding>
+
+                                                                    {/* </Space> */}
                                                                 </div>
                                                             </Col>
                                                             <Col md={12}>

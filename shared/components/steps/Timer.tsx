@@ -6,7 +6,7 @@ import { useTimer } from 'react-timer-hook';
 const Timer = () => {
     const expiryTimestamp = new Date();
     const session: string = typeof Cookies.get('time_in_minuterie') === 'undefined' ? '' + 10 : '' + Cookies.get('time_in_minuterie');
-    expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + parseInt(session));
+    expiryTimestamp.setSeconds(expiryTimestamp.getSeconds() + (3600 - parseInt(session)));
 
     const {
         seconds,

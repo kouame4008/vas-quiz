@@ -10,6 +10,7 @@ export const SELECTIONNER_PACK_BY_ID_URL = '/pack';
 export const SOUSCRIPTION_URL = '/subscription';
 export const LISTE_QUESTION_PAR_SOUSCRIPTION_URL = '/subscription';
 export const ENREGISTRER_SCORE_URL = '/';
+export const ENVOI_DE_LA_REPONSE_URL = '/get/answer';
 
 // USER
 export const LOGIN_USER_URL = '/otp/get';

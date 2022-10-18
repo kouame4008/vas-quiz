@@ -50,3 +50,15 @@ export interface ISouscription {
     pack_id: string;
     category_id: string;
 }
+
+export interface ISessionExpirer {
+    children?: React.ReactNode,
+    visible: boolean,
+    close: any,
+    handleOk?: any,
+    title?: string;
+    current?: any;
+    loading?: boolean;
+    width?: string;
+    style ?: React.CSSProperties
+}
